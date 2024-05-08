@@ -1,4 +1,4 @@
-type Ok<T> = Readonly<{
+type Ok<T> = {
   isOk: true;
   isErr: false;
   unwrap: () => T;
@@ -6,9 +6,9 @@ type Ok<T> = Readonly<{
    * @throws
    */
   unwrapErr: () => never;
-}>;
+};
 
-type Err<E> = Readonly<{
+type Err<E> = {
   isOk: false;
   isErr: true;
   /**
@@ -16,7 +16,7 @@ type Err<E> = Readonly<{
    */
   unwrap: () => never;
   unwrapErr: () => E;
-}>;
+};
 
 export type Result<T, E> = Ok<T> | Err<E>;
 
