@@ -113,6 +113,8 @@ export class Err<E> implements Result<never, E> {
     return this.#inner;
   }
 
+  map<U>(mapperFn: (value: never) => U): Err<E>;
+  map<U>(mapperFn: (value: never) => U, defaultValue: U): Ok<U>;
   map<U>(mapperFn: (value: never) => U, defaultValue?: U): Result<U, E> {
     return defaultValue ? new Ok(defaultValue) : this;
   }
