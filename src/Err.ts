@@ -1,4 +1,4 @@
-import { Result } from './result';
+import { Result } from './Result';
 import { UnwrapError } from './error/UnwrapError';
 
 export default class Err<E> implements Result<never, E> {
