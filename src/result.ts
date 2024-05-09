@@ -1,55 +1,55 @@
 import { UnwrapError } from './error/UnwrapError';
 
 /**
- * Represents the result of a fallible operation.
+ * Represents the result of a fallible operation (i.e. one that may throw).
  * The {Ok} variant represents the successful result;
- * and the {Err} variant represents the unsuccessful result.
+ * while the {Err} variant represents the unsuccessful result.
  */
 export interface Result<T, E> {
   readonly isOk: boolean;
   readonly isErr: boolean;
 
   /**
-   * @returns the inner T of an `Ok<T>` variant.
+   * @returns the inner value of an `Ok` variant or throws an error on `Err` variant.
    * @throws UnwrapError if `Err` variant
    */
   unwrap(): T;
 
   /**
-   * @returns the inner E of an `Err<E>` variant.
+   * @returns the inner errors of an `Err` variant or throws an error on `Ok` variant.
    * @throws UnwrapError if `Ok` variant
    */
   unwrapErr(): E;
 
   /**
-   * Similar to unwrap but safe (does not throw). Instead, it
+   * Similar to `unwrap` but safe (does not throw). Instead, it
    * breaks out of the abstraction by returning
    * either the inner value of an `Ok` variant
-   * or `undefined` in case of an `Err` variant,
+   * or `undefined` (NOOP) in case of an `Err` variant,
    * ignoring its inner error.
    */
   ok(): T | undefined;
 
   /**
-   * Similar to unwrapErr but safe (does not throw). Instead, it
-   * breaks out of the encapsulation by returning
+   * Similar to `unwrapErr` but safe (does not throw). Instead, it
+   * breaks out of the abstraction by returning
    * either the inner error of an `Err` variant
-   * or `undefined` in case of an `Ok` variant,
+   * or `undefined` (NOOP) in case of an `Ok` variant,
    * ignoring its inner value.
    */
   err(): E | undefined;
 
   /**
    * Maps the inner value of an `Ok` variant into a value of type `U`.
-   * It is a NOOP on Err<E> variant, unless a defaultValue is given,
-   * in which case that value is returned inside an Ok<U> instead.
+   * NOOP on `Err` variant, unless a defaultValue is given,
+   * in which case that value is returned inside an `Ok` instead.
    * @param mapperFn
    * @param defaultValue
    */
   map<U>(mapperFn: (value: T) => U, defaultValue?: U): Result<U, E>;
 
   /**
-   * Maps the inner error of an Err<E> variant into another of type F.
+   * Maps the inner error of an `Err` variant into another of type `F`.
    * NOOP on Ok<T> variant.
    * @param mapperFn
    */
