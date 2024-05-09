@@ -49,11 +49,19 @@ export interface Result<T, E> {
   map<U>(mapperFn: (value: T) => U, defaultValue?: U): Result<U, E>;
 
   /**
-   * Maps the inner error of an `Err` variant into another of type `F`.
-   * NOOP on Ok<T> variant.
+   * Maps the inner error of an `Err` variant into another of type `F`;
+   * or performs a NOOP on `Ok` variant.
    * @param mapperFn
    */
   mapErr<F>(mapperFn: (value: E) => F): Result<T, F>;
+
+  /**
+   * Returns the result of calling the `fn` function by passing the
+   * inner value of the `Ok` variant;
+   * or performs a NOOP on `Err` variant.
+   * @param fn
+   */
+  andThen<U>(fn: (value: T) => Result<U, E>): Result<U, E>;
 }
 
 export class Ok<T> implements Result<T, never> {
