@@ -24,4 +24,8 @@ export default class Ok<T> implements Result<T, never> {
   }
 
   err(): undefined {}
+
+  map<K>(mapperFn: (value: T) => K): Ok<K> {
+    return new Ok<K>(mapperFn(this.#inner));
+  }
 }

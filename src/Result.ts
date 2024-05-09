@@ -36,4 +36,11 @@ export interface Result<T, E> {
    * Can be useful when you don't care about the value.
    */
   err(): E | undefined;
+
+  /**
+   * Maps the inner value of an Ok<T> variant into another of type K.
+   * NOOP on Err<E> variant.
+   * @param mapperFn
+   */
+  map<K>(mapperFn: (value: T) => K): Result<K, E>;
 }
