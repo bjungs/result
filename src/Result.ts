@@ -42,7 +42,7 @@ export interface Result<T, E> {
    * NOOP on Err<E> variant.
    * @param mapperFn
    */
-  map<K>(mapperFn: (value: T) => K): Result<K, E>;
+  map<U>(mapperFn: (value: T) => U): Result<U, E>;
 
   /**
    * Maps the inner error of an Err<E> variant into another of type F.

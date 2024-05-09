@@ -2,7 +2,7 @@ import { Err, Ok } from '../src';
 
 describe('mapping methods', () => {
   describe('map', () => {
-    it('should map an Ok<T> into Ok<K>', () => {
+    it('should map an Ok<T> into Ok<U>', () => {
       const res = Ok('123');
       const mapped = res.map(parseInt);
       expect(mapped.ok()).toEqual(123);
