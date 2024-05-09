@@ -1,51 +1,30 @@
-export class UnwrapError extends Error {
-  constructor(reason?: string) {
-    super(`Invalid result unwrap${reason ? `: ${reason}` : '.'}`);
-  }
-}
-
+/**
+ * Represents the result of a fallible operation.
+ * The {Ok} variant represents the successful result;
+ * and the {Err} variant represents the unsuccessful result.
+ */
 export interface Result<T, E> {
   readonly isOk: boolean;
   readonly isErr: boolean;
+
   /**
-   * @throws UnwrapError(reason) if Err<E> variant
+   * @returns the inner T of an `Ok<T>` variant.
+   * @throws UnwrapError if `Err` variant
    */
-  unwrap: (reason?: string) => T;
+  unwrap(): T;
+
   /**
-   * @throws UnwrapError(reason) if Ok<T> variant
+   * @returns the inner E of an `Err<E>` variant.
+   * @throws UnwrapError if `Ok` variant
    */
-  unwrapErr: (reason?: string) => E;
-}
+  unwrapErr(): E;
 
-interface Ok<T> extends Result<T, never> {
-  isOk: true;
-  isErr: false;
-}
-
-interface Err<E> extends Result<never, E> {
-  isOk: false;
-  isErr: true;
-}
-
-export function Ok<T>(value: T): Ok<T> {
-  return {
-    isOk: true,
-    isErr: false,
-    unwrap: () => value,
-    unwrapErr: (reason) => {
-      throw new UnwrapError(reason);
-    },
-  };
-}
-export function Err<E>(error: E): Err<E> {
-  return {
-    isOk: false,
-    isErr: true,
-    unwrap(reason): never {
-      throw new UnwrapError(reason);
-    },
-    unwrapErr(): E {
-      return error;
-    },
-  };
+  /**
+   * Breaks out of the encapsulation by returning
+   * either the inner value `T` of an `Ok<T>` variant
+   * or `undefined` in case of an `Err<E>` variant,
+   * ignoring the error E.
+   * Can be useful when you don't care about the error.
+   */
+  ok(): T | undefined;
 }
