@@ -43,4 +43,11 @@ export interface Result<T, E> {
    * @param mapperFn
    */
   map<K>(mapperFn: (value: T) => K): Result<K, E>;
+
+  /**
+   * Maps the inner error of an Err<E> variant into another of type F.
+   * NOOP on Ok<T> variant.
+   * @param mapperFn
+   */
+  mapErr<F>(mapperFn: (value: E) => F): Result<T, F>;
 }

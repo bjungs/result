@@ -28,4 +28,8 @@ export default class Err<E> implements Result<never, E> {
   map<K>(mapperFn: (value: never) => K): Err<E> {
     return this;
   }
+
+  mapErr<F>(mapperFn: (value: E) => F): Result<never, F> {
+    return new Err<F>(mapperFn(this.#inner));
+  }
 }
