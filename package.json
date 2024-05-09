@@ -6,7 +6,8 @@
   "types": "dist/results.d.ts",
   "scripts": {
     "build": "npx tsc",
-    "test": "npx jest"
+    "test": "npx jest",
+    "prettier": "npx prettier ./src --write"
   },
   "keywords": [],
   "author": "Bernardo J. C. Nunes (nunes.bjc@gmail.com)",
