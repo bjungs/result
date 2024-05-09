@@ -14,6 +14,13 @@ describe('mapping methods', () => {
       const mapped = res.map(parseInt);
       expect(mapped.err()).toEqual(error);
     });
+
+    it('it should default to the given defaultValue', () => {
+      const error = 'error';
+      const res = Err(error);
+      const mapped = res.map(parseInt, 42);
+      expect(mapped.ok()).toEqual(42);
+    });
   });
 
   describe('mapErr', () => {

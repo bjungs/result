@@ -1,5 +1,4 @@
-import _Ok from './Ok';
-import _Err from './Err';
+import { Ok as _Ok, Err as _Err } from './result';
 
 export * from './error/UnwrapError';
 
