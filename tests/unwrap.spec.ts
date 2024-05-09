@@ -1,20 +1,23 @@
-import { ok, err, Result } from '../src';
+import { Ok, Err } from '../src';
 
 describe('unwrap', () => {
-  it('should unwrap values wrapped in Ok', () => {
-    const result: Result<string, never> = ok('some value');
-    expect(result.unwrap()).toBe('some value');
+  it('should return the inner value on Ok', () => {
+    const value = { data: 'value' };
+    expect(Ok(value).unwrap()).toBe(value);
   });
-  it('should unwrap errors wrapped in Err', () => {
-    const result: Result<never, string> = err('some error');
-    expect(result.unwrapErr()).toBe('some error');
+
+  it('should throw when on Err', () => {
+    expect(() => Err('error').unwrap()).toThrow();
   });
-  it('should throw when calling .unwrap() on an Err', () => {
-    const result: Result<never, string> = err('some error');
-    expect(() => result.unwrap()).toThrow();
+});
+
+describe('unwrapErr', () => {
+  it('should on Ok', () => {
+    expect(() => Ok('value').unwrapErr()).toThrow();
   });
-  it('should throw when calling .unwrapErr() on Ok', () => {
-    const result: Result<string, never> = ok('some value');
-    expect(() => result.unwrapErr()).toThrow();
+
+  it('should return the inner valur on Err', () => {
+    const error = { data: 'error' };
+    expect(Err(error).unwrapErr()).toBe(error);
   });
 });
