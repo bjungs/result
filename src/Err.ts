@@ -20,4 +20,8 @@ export default class Err<E> implements Result<never, E> {
   }
 
   ok(): undefined {}
+
+  err(): E {
+    return this.#inner;
+  }
 }

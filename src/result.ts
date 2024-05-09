@@ -27,4 +27,13 @@ export interface Result<T, E> {
    * Can be useful when you don't care about the error.
    */
   ok(): T | undefined;
+
+  /**
+   * Breaks out of the encapsulation by returning
+   * either the inner error `E` of an `Err<E>` variant
+   * or `undefined` in case of an `Ok<T>` variant,
+   * ignoring the value of T.
+   * Can be useful when you don't care about the value.
+   */
+  err(): E | undefined;
 }

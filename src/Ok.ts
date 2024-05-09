@@ -22,4 +22,6 @@ export default class Ok<T> implements Result<T, never> {
   ok(): T {
     return this.#inner;
   }
+
+  err(): undefined {}
 }
