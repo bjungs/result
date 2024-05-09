@@ -95,6 +95,12 @@ export class Ok<T> implements Result<T, never> {
   mapErr<F>(mapperFn: (value: never) => F): Ok<T> {
     return this;
   }
+
+  andThen<U, F>(fn: (value: T) => Ok<U>): Ok<U>;
+  andThen<U, F>(fn: (value: T) => Err<F>): Err<F>;
+  andThen<U, F>(fn: (value: T) => Result<U, F>): Result<U, F> {
+    return fn(this.#inner);
+  }
 }
 
 export class Err<E> implements Result<never, E> {
@@ -130,5 +136,9 @@ export class Err<E> implements Result<never, E> {
 
   mapErr<F>(mapperFn: (value: E) => F): Err<F> {
     return new Err<F>(mapperFn(this.#inner));
+  }
+
+  andThen<U>(fn: (value: never) => Result<U, E>): Err<E> {
+    return this;
   }
 }
