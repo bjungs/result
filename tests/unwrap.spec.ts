@@ -1,6 +1,6 @@
 import { ok, err, Result } from '../src';
 
-describe('result unwrap', () => {
+describe('unwrap', () => {
   it('should unwrap values wrapped in Ok', () => {
     const result: Result<string, never> = ok('some value');
     expect(result.unwrap()).toBe('some value');
