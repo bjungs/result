@@ -1,33 +1,30 @@
-export const UnwrapError = new Error('Unsafe result unwrap');
+export class UnwrapError extends Error {
+  constructor(reason?: string) {
+    super(`Invalid result unwrap${reason ? `: ${reason}` : '.'}`);
+  }
+}
 
 export interface Result<T, E> {
-  isOk: boolean;
-  isErr: Boolean;
+  readonly isOk: boolean;
+  readonly isErr: boolean;
   /**
-   * @throws Error if Err<E> variant
+   * @throws UnwrapError(reason) if Err<E> variant
    */
-  unwrap: () => T;
+  unwrap: (reason?: string) => T;
   /**
-   * @throws Error if Ok<T> variant
+   * @throws UnwrapError(reason) if Ok<T> variant
    */
-  unwrapErr: () => E;
+  unwrapErr: (reason?: string) => E;
 }
 
 interface Ok<T> extends Result<T, never> {
   isOk: true;
   isErr: false;
-  unwrap: () => T;
-  /**
-   * @throws Error
-   */
-  unwrapErr: () => never;
 }
 
 interface Err<E> extends Result<never, E> {
   isOk: false;
   isErr: true;
-  unwrap: () => never;
-  unwrapErr: () => E;
 }
 
 export function Ok<T>(value: T): Ok<T> {
@@ -35,8 +32,8 @@ export function Ok<T>(value: T): Ok<T> {
     isOk: true,
     isErr: false,
     unwrap: () => value,
-    unwrapErr: () => {
-      throw new Error('Unsafe result unwrap!');
+    unwrapErr: (reason) => {
+      throw new UnwrapError(reason);
     },
   };
 }
@@ -44,8 +41,8 @@ export function Err<E>(error: E): Err<E> {
   return {
     isOk: false,
     isErr: true,
-    unwrap(): never {
-      throw new Error('Unsafe result unwrap!');
+    unwrap(reason): never {
+      throw new UnwrapError(reason);
     },
     unwrapErr(): E {
       return error;

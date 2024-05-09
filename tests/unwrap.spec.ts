@@ -1,4 +1,4 @@
-import { Ok, Err } from '../src';
+import { Ok, Err, UnwrapError } from '../src';
 
 describe('unwrap', () => {
   it('should return the inner value on Ok', () => {
@@ -7,13 +7,13 @@ describe('unwrap', () => {
   });
 
   it('should throw when on Err', () => {
-    expect(() => Err('error').unwrap()).toThrow();
+    expect(() => Err('error').unwrap()).toThrow(UnwrapError);
   });
 });
 
 describe('unwrapErr', () => {
   it('should on Ok', () => {
-    expect(() => Ok('value').unwrapErr()).toThrow();
+    expect(() => Ok('value').unwrapErr()).toThrow(UnwrapError);
   });
 
   it('should return the inner valur on Err', () => {
