@@ -22,25 +22,25 @@ export interface Result<T, E> {
   unwrapErr(): E;
 
   /**
-   * Breaks out of the encapsulation by returning
-   * either the inner value `T` of an `Ok<T>` variant
-   * or `undefined` in case of an `Err<E>` variant,
-   * ignoring the error E.
-   * Can be useful when you don't care about the error.
+   * Similar to unwrap but safe (does not throw). Instead, it
+   * breaks out of the abstraction by returning
+   * either the inner value of an `Ok` variant
+   * or `undefined` in case of an `Err` variant,
+   * ignoring its inner error.
    */
   ok(): T | undefined;
 
   /**
-   * Breaks out of the encapsulation by returning
-   * either the inner error `E` of an `Err<E>` variant
-   * or `undefined` in case of an `Ok<T>` variant,
-   * ignoring the value of T.
-   * Can be useful when you don't care about the value.
+   * Similar to unwrapErr but safe (does not throw). Instead, it
+   * breaks out of the encapsulation by returning
+   * either the inner error of an `Err` variant
+   * or `undefined` in case of an `Ok` variant,
+   * ignoring its inner value.
    */
   err(): E | undefined;
 
   /**
-   * Maps the inner value of an Ok<T> variant into another of type U.
+   * Maps the inner value of an `Ok` variant into a value of type `U`.
    * It is a NOOP on Err<E> variant, unless a defaultValue is given,
    * in which case that value is returned inside an Ok<U> instead.
    * @param mapperFn
