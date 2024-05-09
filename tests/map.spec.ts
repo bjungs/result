@@ -15,8 +15,15 @@ describe('mapping methods', () => {
       expect(mapped.err()).toEqual(error);
     });
 
-    it('it should default to the given defaultValue', () => {
+    it('it should default to the given value', () => {
       const error = 'error';
+      const res = Err(error);
+      const mapped = res.map(parseInt, 42);
+      expect(mapped.ok()).toEqual(42);
+    });
+
+    it('it should default to the given value even if falsy ', () => {
+      const error = 0;
       const res = Err(error);
       const mapped = res.map(parseInt, 42);
       expect(mapped.ok()).toEqual(42);

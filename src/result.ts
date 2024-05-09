@@ -116,7 +116,8 @@ export class Err<E> implements Result<never, E> {
   map<U>(mapperFn: (value: never) => U): Err<E>;
   map<U>(mapperFn: (value: never) => U, defaultValue: U): Ok<U>;
   map<U>(mapperFn: (value: never) => U, defaultValue?: U): Result<U, E> {
-    return defaultValue ? new Ok(defaultValue) : this;
+    if (defaultValue == undefined) return this;
+    return new Ok(defaultValue);
   }
 
   mapErr<F>(mapperFn: (value: E) => F): Err<F> {
