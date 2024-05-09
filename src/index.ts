@@ -1,4 +1,6 @@
-import { Ok as _Ok, Err as _Err } from './result';
+import { type Result, Ok as _Ok, Err as _Err } from './result';
+
+export type { Result };
 
 export * from './error/UnwrapError';
 
