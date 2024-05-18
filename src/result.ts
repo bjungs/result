@@ -62,6 +62,11 @@ export interface Result<T, E> {
    * @param fn
    */
   andThen<U>(fn: (value: T) => Result<U, E>): Result<U, E>;
+
+  /**
+   * Unwraps the inner value of either variant.
+   */
+  inner(): T | E;
 }
 
 export class Ok<T> implements Result<T, never> {
@@ -100,6 +105,10 @@ export class Ok<T> implements Result<T, never> {
   andThen<U, F>(fn: (value: T) => Err<F>): Err<F>;
   andThen<U, F>(fn: (value: T) => Result<U, F>): Result<U, F> {
     return fn(this.#inner);
+  }
+
+  inner(): T {
+    return this.#inner;
   }
 }
 
@@ -140,5 +149,9 @@ export class Err<E> implements Result<never, E> {
 
   andThen<U>(fn: (value: never) => Result<U, E>): Err<E> {
     return this;
+  }
+
+  inner(): E {
+    return this.#inner;
   }
 }

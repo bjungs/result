@@ -1,5 +1,4 @@
 import { Err, Ok } from '../src';
-import { Result } from '../src/result';
 
 describe('mapping methods', () => {
   describe('map', () => {
