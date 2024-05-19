@@ -2,78 +2,72 @@ import { UnwrapError } from './error/UnwrapError';
 
 /**
  * Represents the result of a fallible operation (i.e. one that may throw).
- * The {Ok} variant represents the successful result;
- * while the {Err} variant represents the unsuccessful result.
+ * The `Ok` variant represents a successful result;
+ * while the `Err` variant represents a failed result.
  */
-export interface Result<T, E> {
+export type Result<T, E> = Ok<T> | Err<E>;
+export type AsyncResult<T, E> = Promise<Result<T, E>>;
+
+interface IResult<T, E> {
   readonly isOk: boolean;
   readonly isErr: boolean;
 
   /**
-   * @returns the inner value of an `Ok` variant or throws an error on `Err` variant.
-   * @throws UnwrapError if `Err` variant
+   * @returns the inner value of `Ok`.
+   * @throws UnwrapError if `Err`
    */
   unwrap(): T;
 
   /**
-   * @returns the inner errors of an `Err` variant or throws an error on `Ok` variant.
-   * @throws UnwrapError if `Ok` variant
+   * @returns the inner value of `Err`.
+   * @throws UnwrapError if `Ok`
    */
   unwrapErr(): E;
 
   /**
-   * Similar to `unwrap` but safe (does not throw). Instead, it
-   * breaks out of the abstraction by returning
-   * either the inner value of an `Ok` variant
-   * or `undefined` (NOOP) in case of an `Err` variant,
-   * ignoring its inner error.
+   * Similar to `unwrap` but does not throw. Instead, it
+   * returns either the inner value of `Ok`
+   * or `undefined` (noop) if `Err`.
    */
   ok(): T | undefined;
 
   /**
-   * Similar to `unwrapErr` but safe (does not throw). Instead, it
-   * breaks out of the abstraction by returning
-   * either the inner error of an `Err` variant
-   * or `undefined` (NOOP) in case of an `Ok` variant,
-   * ignoring its inner value.
+   * Similar to `unwrapErr` but does not throw. Instead, it
+   * returns either the inner value of `Err`
+   * or `undefined` (noop) if `Ok`.
    */
   err(): E | undefined;
 
   /**
-   * Maps the inner value of an `Ok` variant into a value of type `U`.
-   * NOOP on `Err` variant, unless a defaultValue is given,
-   * in which case that value is returned inside an `Ok` instead.
+   * Maps the inner value of `Ok` into a value of type `U`.
+   * On `Err`, if a `defaultValue` is given, that value is
+   * returned wrapped in `Ok`.
    * @param mapperFn
    * @param defaultValue
    */
   map<U>(mapperFn: (value: T) => U, defaultValue?: U): Result<U, E>;
 
   /**
-   * Maps the inner error of an `Err` variant into another of type `F`;
-   * or performs a NOOP on `Ok` variant.
+   * Maps the inner value of `Err` into a value of type `F`.
+   * The call is a noop on `Ok`.
    * @param mapperFn
    */
   mapErr<F>(mapperFn: (value: E) => F): Result<T, F>;
 
   /**
-   * Returns the result of calling the `fn` function by passing the
-   * inner value of the `Ok` variant;
-   * or performs a NOOP on `Err` variant.
+   * Returns the result of calling a fallible function (`fn`)
+   * with the inner value of the `Ok` variant;
+   * The call is a noop on `Err`.
    * @param fn
    */
   andThen<U>(fn: (value: T) => Result<U, E>): Result<U, E>;
-
-  /**
-   * Unwraps the inner value of either variant.
-   */
-  inner(): T | E;
 }
 
-export class Ok<T> implements Result<T, never> {
+export class Ok<T> implements IResult<T, never> {
+  readonly #inner: T;
+
   readonly isErr = false;
   readonly isOk = true;
-
-  readonly #inner: T;
 
   constructor(value: T) {
     this.#inner = value;
@@ -106,17 +100,13 @@ export class Ok<T> implements Result<T, never> {
   andThen<U, F>(fn: (value: T) => Result<U, F>): Result<U, F> {
     return fn(this.#inner);
   }
-
-  inner(): T {
-    return this.#inner;
-  }
 }
 
-export class Err<E> implements Result<never, E> {
+export class Err<E> implements IResult<never, E> {
+  readonly #inner: E;
+
   readonly isOk = false;
   readonly isErr = true;
-
-  readonly #inner: E;
 
   constructor(error: E) {
     this.#inner = error;
@@ -149,9 +139,5 @@ export class Err<E> implements Result<never, E> {
 
   andThen<U>(fn: (value: never) => Result<U, E>): Err<E> {
     return this;
-  }
-
-  inner(): E {
-    return this.#inner;
   }
 }

@@ -1,13 +1,17 @@
-import { type Result, Ok as _Ok, Err as _Err } from './result';
-
-export type { Result };
+import * as Result from './result';
 
 export * from './error/UnwrapError';
 
-export function Ok<T>(value: T): _Ok<T> {
-  return new _Ok(value);
+export function Ok(): Result.Ok<void>;
+export function Ok(value: undefined): Result.Ok<void>;
+export function Ok<T>(value: T): Result.Ok<T>;
+export function Ok<T>(value?: T): Result.Ok<T | void> {
+  return new Result.Ok(value);
 }
 
-export function Err<E>(error: E): _Err<E> {
-  return new _Err(error);
+export function Err(): Result.Err<void>;
+export function Err(error: undefined): Result.Err<void>;
+export function Err<E>(error: E): Result.Err<E>;
+export function Err<E>(error?: E): Result.Err<E | void> {
+  return new Result.Err(error);
 }
