@@ -6,6 +6,10 @@ import { UnwrapError } from './error/UnwrapError';
  * while the `Err` variant represents a failed result.
  */
 export type Result<T, E> = Ok<T> | Err<E>;
+
+/**
+ * Represents a Result<T, E> in an asynchronous context.
+ */
 export type AsyncResult<T, E> = Promise<Result<T, E>>;
 
 interface IResult<T, E> {

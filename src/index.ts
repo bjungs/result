@@ -1,5 +1,4 @@
 import * as Result from './result';
-import { AsyncResult } from './result';
 
 export * from './error/UnwrapError';
 
