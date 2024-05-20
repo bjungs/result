@@ -1,4 +1,5 @@
 import * as Result from './result';
+import { AsyncResult } from './result';
 
 export * from './error/UnwrapError';
 
@@ -24,9 +25,17 @@ export function Err<E>(error?: E): Result.Err<E | void> {
   return new Result.Err(error);
 }
 
+export function fromAsync<T, E>(
+  fn: () => Promise<T>,
+): Result.AsyncResult<T, E> {
+  return fn()
+    .then(Ok<T>)
+    .catch(Err<E>);
+}
+
 export function from<T, E>(fn: () => T): Result.Result<T, E> {
   try {
-    return Ok<ReturnType<typeof fn>>(fn());
+    return Ok<T>(fn());
   } catch (e: unknown) {
     return Err<E>(e as unknown as E);
   }
@@ -36,6 +45,7 @@ const helpers = {
   Ok,
   Err,
   from,
+  fromAsync,
 };
 
 export { helpers as Result };
