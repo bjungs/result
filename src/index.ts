@@ -25,6 +25,12 @@ export function Err<E>(error?: E): Result.Err<E | void> {
   return new Result.Err(error);
 }
 
+/**
+ * Calls the given async function and wraps the returned value in a `Result`.
+ * If the returned Promise rejects, returns an `Err` with the rejected value.
+ * Otherwise, returns an `Ok` with the returned value.
+ * @param fn
+ */
 export function fromAsync<T, E>(
   fn: () => Promise<T>,
 ): Result.AsyncResult<T, E> {
@@ -33,6 +39,12 @@ export function fromAsync<T, E>(
     .catch(Err<E>);
 }
 
+/**
+ * Calls the given function and wraps the returned value in a `Result`.
+ * If the function throws, returns an `Err` with the value thrown.
+ * Otherwise, returns an `Ok` with the returned value.
+ * @param fn
+ */
 export function from<T, E>(fn: () => T): Result.Result<T, E> {
   try {
     return Ok<T>(fn());
